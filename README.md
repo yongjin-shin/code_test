@@ -3,21 +3,30 @@ Preparing for the code test
 # Problem List
 ## DFS
 1. [19236 청소년 상어](https://www.acmicpc.net/problem/19236)
-
-
+윷놀이/backtracking
+게리맨더링2
+연구소3
 
 ## BFS
 
 1. [16236 아기 상어](https://www.acmicpc.net/problem/16236)
+이차원배열/loop risk
 
+인구이동?????
 
 
 ## Simulation
 
 1. [19237 어른 상어](https://www.acmicpc.net/problem/19237)
+2. [20057 토네이도 상어](https://www.acmicpc.net/problem/20057)
+원판, 새로운게임2, 낚시왕, 미세먼지, 나무 재테크, 
 
 
 # Note
+
+## 0. 시간
+- N of samples: 1억 ~ 1초
+
 ## 1. 최단거리
 - BFS, DFS, Dijkstra, Floyd-Warshall
   - E: # of Edges
@@ -36,4 +45,6 @@ Preparing for the code test
 ### DFS vs BFS
 - DFS
 - BFS : 트리 깊이가 무한대가 될 때. 미로찾기 루프 발생 시.
+
+
 
