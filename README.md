@@ -8,15 +8,15 @@ Preparing for the code test
 연구소3
 
 ## BFS
-
 1. [16236 아기 상어](https://www.acmicpc.net/problem/16236)
+2. [16234 인구이동](https://www.acmicpc.net/problem/16234)
+3. [17142 연구소3](https://www.acmicpc.net/problem/17142)
 이차원배열/loop risk
 
-인구이동?????
+
 
 
 ## Simulation
-
 1. [19237 어른 상어](https://www.acmicpc.net/problem/19237)
 2. [20057 토네이도 상어](https://www.acmicpc.net/problem/20057)
 원판, 새로운게임2, 낚시왕, 미세먼지, 나무 재테크, 
