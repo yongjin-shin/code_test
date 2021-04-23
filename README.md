@@ -4,7 +4,8 @@ Preparing for the code test
 ## DFS
 1. [19236 청소년 상어](https://www.acmicpc.net/problem/19236)
 2. [1949 등산로 조성](https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AV5PoOKKAPIDFAUq)
-윷놀이/backtracking
+3. [15684 사다리 조작](https://www.acmicpc.net/problem/15684)
+4. [17825 주사위 윷놀이](https://www.acmicpc.net/problem/17825)
 게리맨더링2
 
 ## BFS
@@ -22,6 +23,8 @@ Preparing for the code test
 ## Simulation
 1. [19237 어른 상어](https://www.acmicpc.net/problem/19237)
 2. [20057 토네이도 상어](https://www.acmicpc.net/problem/20057)
+3. [15685 드래곤 커브](https://www.acmicpc.net/problem/15685) - 헤맸던 문제
+
 원판, 새로운게임2, 낚시왕, 미세먼지, 나무 재테크, 
 
 
