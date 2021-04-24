@@ -1,23 +1,26 @@
 # START 21.04.22 PM19:22
 # READ&IDEA Total Case : 3,000,000
 # FAIL PM21:00
+
 """
 그냥 combination으로 풀려고, init에서 옆에 있는것들 제거하고
 조합을 만들었는데, 생각해보니 이렇게 해버리면 연결된 부분들이 생겨버림...
-
 결국 DFS로 처리해야함. 뭔가 순서를 만들면 편할 것 같았는데, 그냥 for loop 돌면서 해야할 듯;;
+으아... 왜 이렇게 안되지ㅠㅠ
+
+1) 일단 Combination은 모든 케이스들 다 체크하면 통과됨.
+2) DFS는 그냥 exit을 해버리면 안됨...찾았다고 무조건 exit해버리면 가장 적은 수를 못 찾음!
 """
 
+#! 풀이2
+
 class Map():
-    def __init__(self, N, M, H, infos):
-        self.N = N
-        self.H = H
-        self.M = M
+    def __init__(self, N, H, infos):
+        self.C = N
+        self.R = H
         self.infos = infos
-        self.visited = [[0 for _ in range(N)] for _ in range(H)]
-        
-        self.check()
-        self.count()
+        self.visited = self.check()
+        self.MIN = 4
     
     @staticmethod
     def printM(tbl):
@@ -29,99 +32,63 @@ class Map():
         print('='*10)
         return
     
-    def count(self):
-        checked = [[0 for _ in range(self.N)] for _ in range(self.H)]
-        
-        for r in range(self.H):
-            for c in range(self.N):
-                if self.visited[r][c]:
-                    checked[r][c] = -1
-                
-                if 0 <= c < self.N-1:
-                    if self.visited[r][c+1]:
-                        checked[r][c] = -1
-                    
-        return checked
-    
     def check(self):
+        visited = [[0 for _ in range(self.C)] for _ in range(self.R)]
         for info in self.infos:
             r, c = info
-            r -= 1
-            self.visited[r][c-1] = c
-            self.visited[r][c] = c
-        return
-    
+            visited[r-1][c-1] = 1
+        return visited
+
     def sim(self, visited):
-        nr, nc = 0, 0
-        for c in range(self.N-1):
+        for c in range(self.C):
             nc = c
-            for r in range(self.H):
-                nr = r
-                # print(nc)
-                if visited[nr][nc] > 0:
-                    if 0 < nc < self.N-1:
-                        if visited[nr][nc+1] == visited[nr][nc]:
-                            nc += 1
-                            continue
-                        if visited[nr][nc-1] == visited[nr][nc]:
-                            nc -= 1
-                            continue
-                    
-                    elif 0 == nc:
-                        if visited[nr][nc+1] == visited[nr][nc]:
-                            nc += 1
-                            continue
-                    
-                    elif nc == self.N-1:
-                        if visited[nr][nc-1] == visited[nr][nc]:
-                            nc -= 1
-                            continue
-                
+            for r in range(self.R):
+                if visited[r][nc]:
+                    nc += 1
+                else:
+                    if nc > 0 and visited[r][nc-1]:
+                        nc -= 1
             if nc != c:
                 return False
-        
         return True
 
-
-    def feasible(self, r, c, C, V):
-        if not V[r][c]:
-            if 0 <= c < self.N-1:
-                if not V[r][c+1]:
-                    return True
+    def feasible(self, r, c):
+        if 0 < c < self.C-1:
+            if not (self.visited[r][c-1] or self.visited[r][c+1]):
+                return True
+        
+        if 0 == c:
+            if not self.visited[r][c+1]:
+                return True
+        
         return False
     
-    def DFS(self, visited, checked, round):
-        if round == 3: 
-            if self.sim(visited):
-                return round
-            else:
-                return -1
+    def DFS(self, rr, cc, round):
+        if round >= self.MIN:
+            return
+        else:
+            if self.sim(self.visited):
+                if self.MIN >= round:
+                    self.MIN = round
+                return
         
-        elif round < 3:
-            if self.sim(visited):
-                return round
-            else:
-                C = [row[:] for row in checked]
-                for r in range(self.H):
-                    for c in range(self.N-1):
-                        if C[r][c] != -1 and self.feasible(r, c, C, visited):
-                            V = [row[:] for row in visited]
-                            self.printM(V)
-                            self.printM(C)
-                            V[r][c] = c+1
-                            V[r][c+1] = c+1
-                            C[r][c] = -1
-                            self.printM(V)
-                            self.printM(C)
-                            ret = self.DFS(V, C, round+1)
-                            if ret > 0:
-                                return ret
-                return -1
+        if round == 3:
+            return
+        else:
+            for r in range(rr, self.R):
+                ss = cc if rr == r else 0
+                for c in range(ss, self.C-1):
+                    if not self.visited[r][c] and self.feasible(r, c):
+                        self.visited[r][c] = 1
+                        self.DFS(r, c, round+1)
+                        self.visited[r][c] = 0
     
     def run(self):
-        checked = self.count()
-        ret = self.DFS(self.visited, checked, 0)
-        return ret
+        self.DFS(0, 0, 0)
+        if self.MIN == 4:
+            return -1
+        else:
+            return self.MIN
 
 
 def main():
@@ -129,7 +96,7 @@ def main():
     infos = []
     for _ in range(M):
         infos.append(list(map(int, input().split())))
-    m = Map(N, M, H, infos)
+    m = Map(N, H, infos)
     ret = m.run()
     print(ret)
 
@@ -137,3 +104,110 @@ def main():
 if __name__ == '__main__':
     main()
 
+
+
+#! 풀이1
+from itertools import combinations
+
+class Map():
+    def __init__(self, N, H, infos):
+        self.R = H
+        self.C = N
+        self.infos = infos
+        self.visited = self.check()
+        self.totM = self.count()
+    
+    @staticmethod
+    def printM(tbl):
+        print('\n')
+        for row in tbl:
+            for c in row:
+                print(c, end=' ')
+            print('\n')
+        print('='*10)
+        return
+    
+    def check(self):
+        visited = [[0 for _ in range(self.C)] for _ in range(self.R)]
+        for info in self.infos:
+            r, c = info
+            visited[r-1][c-1] = 1
+        return visited
+    
+    def count(self):
+        ret = []
+        for r in range(self.R):
+            for c in range(self.C-1):
+                if not self.visited[r][c]:
+                    if c == 0:
+                        if not self.visited[r][c+1]:
+                            ret.append((r, c))
+                    else:
+                        if not self.visited[r][c-1] and not self.visited[r][c+1]:
+                            ret.append((r, c))
+        return ret
+    
+    def feasible(self, comb, N):
+        V = [row[:] for row in self.visited]
+
+        for i in range(N):
+            r, c = comb[i]
+            okay = True
+            
+            if c == 0:
+                if self.visited[r][c] or self.visited[r][c+1]:
+                    okay = False
+            else:
+                if self.visited[r][c] or self.visited[r][c+1] or self.visited[r][c-1]:
+                    okay = False
+            
+            if not okay:
+                return False, None
+            else:
+                V[r][c] = 1
+        return True, V
+    
+    def recover(self, comb, N):
+        for i in range(N):
+            r, c = comb[i]
+            self.visited[r][c] = 0
+        return
+    
+    def sim(self, visited):
+        for c in range(self.C):
+            nc = c
+            for r in range(self.R):
+                if visited[r][nc]:
+                    nc += 1
+                else:
+                    if nc > 0 and visited[r][nc-1]:
+                        nc -= 1
+            if nc != c:
+                return False
+        return True
+    
+    def run(self):
+        if self.sim(self.visited):
+            return 0
+        
+        for i in range(1, 4):
+            combs = combinations(self.totM, i)
+            for comb in combs:
+                okay, V = self.feasible(comb, i)
+                if okay:
+                    if self.sim(V):
+                        return i
+        return -1
+
+def main():
+    N, M, H = list(map(int, input().split()))
+    infos = []
+    for _ in range(M):
+        infos.append(list(map(int, input().split())))
+    m = Map(N, H, infos)
+    ret = m.run()
+    print(ret)
+
+
+if __name__ == '__main__':
+    main()
